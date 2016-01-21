@@ -2,6 +2,8 @@
 import cherrypy, os, sys
 from time import gmtime, strftime, localtime
 
+working_dir = '.'
+
 HTML_HEADER = '\
 <!DOCTYPE html>\r\
 <html lang="en">\r\
@@ -73,9 +75,6 @@ def download_email(email_flag='UNSEEN'):
 	mail.login(os.environ['GRISVAKT_EMAIL_USER'], os.environ['GRISVAKT_EMAIL_PASSWORD'])
 	mail.select('inbox')
 
-	# Working dir
-	working_dir = "."
-
 	# Download new emails
 	result, data = mail.uid('search', None, email_flag)
 
@@ -104,7 +103,9 @@ def download_email(email_flag='UNSEEN'):
 	return len(uids)
 
 def get_images(myDir):
+	print "Checking directory: %s" %myDir	
 	myFiles = os.listdir(myDir)
+	print "myfiles: %s"% myFiles
 	sorted_list = []
 	
 	for n in sorted([int(x.split('-')[0]) for x in myFiles if '-' in x], reverse=1):
@@ -121,7 +122,7 @@ class GrisVakt(object):
 		
 		HTML_LIST=''
 		
-		the_images = get_images("./assets/images")
+		the_images = get_images("%s/assets/images/"% working_dir)
 		
 		if len(the_images) > 0:
 			for image in the_images:
@@ -160,7 +161,7 @@ if __name__ == '__main__':
 	conf = {
 		'/': {
 			'tools.sessions.on': True,
-			'tools.staticdir.root': os.path.abspath(os.getcwd())
+			'tools.staticdir.root': os.path.abspath(working_dir)
 		},
 		'/assets': {
 			'tools.staticdir.on': True,
@@ -171,7 +172,8 @@ if __name__ == '__main__':
 	cherrypy.config.update(
     {'server.socket_host': '0.0.0.0'} )
 
-	if get_images("./assets/images") == 0:
+	if len(get_images("%s/assets/images/"% working_dir)) == 0:
+		print "No images...pulling all"
 		download_email('ALL')
     	
 	cherrypy.quickstart(GrisVakt(), '/', conf)
