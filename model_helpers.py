@@ -2,7 +2,7 @@
 import os
 from time import gmtime, strftime, localtime, mktime
 
-def get_images(myDir, max_result=10):
+def get_images(myDir, max_result=25):
 	print "Checking directory: %s" %myDir	
 	myFiles = os.listdir(myDir)
 	print "myfiles: %s"% myFiles
