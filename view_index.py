@@ -36,7 +36,8 @@ HTML_HEADER = '\
   \r\
   <body>\r\
 \r\
-    <nav class="navbar navbar-inverse navbar-fixed-top">\r\
+'
+HTML_NAVBAR_START= '    <nav class="navbar navbar-inverse navbar-fixed-top">\r\
       <div class="container">\r\
         <div class="navbar-header">\r\
           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">\r\
@@ -45,8 +46,14 @@ HTML_HEADER = '\
             <span class="icon-bar"></span>\r\
             <span class="icon-bar"></span>\r\
           </button>\r\
-          <a class="navbar-brand" href="#">Bj&aumlllebergs GrisVakt</a>\r\
+          <a class="navbar-brand" href="#">GrisVakt 1.0</a>\r\
         </div>\r\
+        <div id="navbar" class="collapse navbar-collapse">\r\
+          <ul class="nav navbar-nav">\r\
+'
+
+HTML_NAVBAR_END = '          </ul>\r\
+        </div><!--/.nav-collapse -->\r\
       </div>\r\
     </nav>\r\
 '
@@ -57,9 +64,26 @@ HTML_FOOTER = "\r\
     <!-- Placed at the end of the document so the pages load faster -->\r\
     <script src=\"https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js\"></script>\r\
     <script>window.jQuery || document.write('<script src=\"../../assets/js/vendor/jquery.min.js\"><\/script>')</script>\r\
-    <script src=\"../../dist/js/bootstrap.min.js\"></script>\r\
+    <script src=\"/assets/js/bootstrap.min.js\"></script>\r\
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->\r\
-    <script src=\"../../assets/js/ie10-viewport-bug-workaround.js\"></script>\r\
+    <script src=\"/assets/js/ie10-viewport-bug-workaround.js\"></script>\r\
   </body>\r\
 </html>\r\
 "
+def html_navbar(selection):
+	active = '<li class="active">'
+	inactive = '<li>'
+	
+	HTML_NAVBAR = ''
+	
+	selections = ['<a href="#">3dgr</a></li>\r', '<a href="#">7dgr</a></li>\r', '<a href="#">Alla bilder</a></li>\r']
+	
+	for item in selections:
+		if selection == selections.index(item):
+			HTML_NAVBAR += '%s%s'% (active, item)
+		else:
+			HTML_NAVBAR += '%s%s'% (inactive, item)
+			
+	return '%s\r%s\r%s'%(HTML_NAVBAR_START, HTML_NAVBAR, HTML_NAVBAR_END)
+            
+            

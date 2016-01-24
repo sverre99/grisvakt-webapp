@@ -4,7 +4,7 @@ from time import gmtime, strftime, localtime
 
 # Import my view & model
 from model_helpers import get_images, download_email
-from view_index import HTML_HEADER, HTML_FOOTER
+from view_index import HTML_HEADER, HTML_FOOTER, html_navbar
 
 myDir = '.'
 
@@ -27,7 +27,7 @@ class GrisVakt(object):
 					<img src="/assets/images/%s">\r\
 				</div>\r\
 				<br>\r\
-'% image
+'% image["name"]
 		else:
 			HTML_LIST = '\r\
 				<div class="container">\r\
@@ -40,7 +40,6 @@ class GrisVakt(object):
 	<div class="container">\r\
 \r\
       <div class="starter-template">\r\
-        <h1>V&aumllkommen till &aringtelkameran i Bj&aumllleberg</h1>\r\
         <p class="lead">Senast uppdaterad <strong>%s</strong></p>\r\
       </div>\r\
       \r\
@@ -51,7 +50,7 @@ class GrisVakt(object):
     </div><!-- /.container -->\r\
 '% (update_time, HTML_LIST)
 
-		return "%s%s%s"%(HTML_HEADER, HTML_BODY, HTML_FOOTER)
+		return "%s%s%s%s"%(HTML_HEADER, html_navbar(0), HTML_BODY, HTML_FOOTER)
 
 if __name__ == '__main__':
 	conf = {

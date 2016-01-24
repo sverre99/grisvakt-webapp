@@ -1,20 +1,32 @@
 #!/usr/bin/python
 import os
 from time import gmtime, strftime, localtime, mktime
+from datetime import datetime, timedelta
 
-def get_images(myDir, max_result=25):
-	print "Checking directory: %s" %myDir	
+def get_images(myDir, max_days=3):
+	print "Checking directory: %s, max %s days old"% (myDir, max_days)
 	myFiles = os.listdir(myDir)
-	print "myfiles: %s"% myFiles
-	sorted_list = []
+	#print "mytheFiles: %s"% myFiles
+	filtered_list = []
+	by_age = []
+	now = datetime.now()
 	
-	for n in sorted([int(x.split('-')[0]) for x in myFiles if '-' in x], reverse=1):
-		sorted_list.extend([x for x in myFiles if x.startswith('%s-'% n)])
+	# Start with sorting by name & and filter only files with "-" in it
+	for n in sorted([int(x.split('-')[0]) for x in myFiles if '-' in x], reverse=1):	
+		for theFile in [x for x in myFiles if x.startswith('%s-'% n)]:
+			filtered_list.extend([{ "name" : theFile, "creation_date" : os.path.getmtime("%s/%s"% (myDir, theFile)) }])
+			#print "Checked theFile: %s with creationdate: %s"% (theFile, filtered_list[theFile])
 	
-	if len(sorted_list) > max_result:
-		return sorted_list[0:max_result]
-	else:
-		return sorted_list
+	# Now filter out to match images within our time-frame
+ 	for theFile in filtered_list:
+ 		# Save theFiles only within our range
+ 		if (now - datetime.fromtimestamp(theFile["creation_date"])) < timedelta(days=max_days):
+ 			by_age.extend([theFile])
+ 			print "Saving %s"% theFile
+ 		else:
+ 			print "Skipping %s"% theFile
+	
+	return by_age
 
 def download_email(myDir,email_flag='UNSEEN'):
 	import imaplib, email
