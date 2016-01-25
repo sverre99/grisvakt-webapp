@@ -10,15 +10,28 @@ myDir = '.'
 
 class GrisVakt(object):
 
+	def __init__(self):
+		self.view_days = 3
+	
+	@cherrypy.expose
+	def days(self, view_days):
+		try:
+			self.view_days=int(view_days)
+		except:
+			self.view_days=3
+		
+		return '<html><head><meta HTTP-EQUIV="REFRESH" content="0; url=/"></head></html>'
+
 	@cherrypy.expose
 	def index(self):
+		print "(index) Got view_days=%s"% self.view_days
 		download_email(myDir)
 		update_time = strftime("%Y-%m-%d %H:%M:%S", localtime())
 		print "update: %s"% update_time
 		
 		HTML_LIST=''
 		
-		the_images = get_images("%s/assets/images/"% myDir)
+		the_images = get_images("%s/assets/images/"% myDir, self.view_days)
 		
 		if len(the_images) > 0:
 			for image in the_images:
@@ -40,7 +53,8 @@ class GrisVakt(object):
 	<div class="container">\r\
 \r\
       <div class="starter-template">\r\
-        <p class="lead">Senast uppdaterad <strong>%s</strong></p>\r\
+        <br>\r\
+        <p class="lead">Hittade <strong>%s</strong> bilder, senast uppdaterad <strong>%s</strong></p>\r\
       </div>\r\
       \r\
     <div>\r\
@@ -48,9 +62,9 @@ class GrisVakt(object):
     </div>\r\
 \r\
     </div><!-- /.container -->\r\
-'% (update_time, HTML_LIST)
+'% (len(the_images), update_time, HTML_LIST)
 
-		return "%s%s%s%s"%(HTML_HEADER, html_navbar(0), HTML_BODY, HTML_FOOTER)
+		return "%s%s%s%s"%(HTML_HEADER, html_navbar(self.view_days), HTML_BODY, HTML_FOOTER)
 
 if __name__ == '__main__':
 	conf = {

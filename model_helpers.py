@@ -3,7 +3,7 @@ import os
 from time import gmtime, strftime, localtime, mktime
 from datetime import datetime, timedelta
 
-def get_images(myDir, max_days=3):
+def get_images(myDir, max_days=0):
 	print "Checking directory: %s, max %s days old"% (myDir, max_days)
 	myFiles = os.listdir(myDir)
 	#print "mytheFiles: %s"% myFiles
@@ -17,16 +17,18 @@ def get_images(myDir, max_days=3):
 			filtered_list.extend([{ "name" : theFile, "creation_date" : os.path.getmtime("%s/%s"% (myDir, theFile)) }])
 			#print "Checked theFile: %s with creationdate: %s"% (theFile, filtered_list[theFile])
 	
-	# Now filter out to match images within our time-frame
- 	for theFile in filtered_list:
- 		# Save theFiles only within our range
- 		if (now - datetime.fromtimestamp(theFile["creation_date"])) < timedelta(days=max_days):
- 			by_age.extend([theFile])
- 			print "Saving %s"% theFile
- 		else:
- 			print "Skipping %s"% theFile
-	
-	return by_age
+	# Now filter out to match images within our time-frame, unless 0
+	if not max_days==0:
+		for theFile in filtered_list:
+			# Save theFiles only within our range
+			if (now - datetime.fromtimestamp(theFile["creation_date"])) < timedelta(days=max_days):
+				by_age.extend([theFile])
+				print "Saving %s"% theFile
+			else:
+				print "Skipping %s"% theFile
+		return by_age
+	else:
+		return filtered_list
 
 def download_email(myDir,email_flag='UNSEEN'):
 	import imaplib, email

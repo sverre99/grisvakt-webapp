@@ -70,16 +70,19 @@ HTML_FOOTER = "\r\
   </body>\r\
 </html>\r\
 "
-def html_navbar(selection):
+def html_navbar(view_days):
 	active = '<li class="active">'
 	inactive = '<li>'
 	
 	HTML_NAVBAR = ''
 	
-	selections = ['<a href="#">3dgr</a></li>\r', '<a href="#">7dgr</a></li>\r', '<a href="#">Alla bilder</a></li>\r']
+	# Map the number of days to the order in the selections-list [3 = 0, 7 = 1, 0 = 3 osv].
+	my_index = [3,7,0]
+	
+	selections = ['<a href="/days/3">3dgr</a></li>\r', '<a href="/days/7">7dgr</a></li>\r', '<a href="/days/0">Alla bilder</a></li>\r']
 	
 	for item in selections:
-		if selection == selections.index(item):
+		if my_index.index(view_days) == selections.index(item):
 			HTML_NAVBAR += '%s%s'% (active, item)
 		else:
 			HTML_NAVBAR += '%s%s'% (inactive, item)
